@@ -1,0 +1,528 @@
+---
+title: "PGA Tour Data Analysis Update"
+author: "Sam Freis"
+date: "12/26/2023"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls())
+cat("\014") 
+
+library(tidyverse)
+library(readxl)
+library(psych)
+library(car)
+library(forcats)
+library(lme4)
+library(gridExtra)
+library(knitr)
+library(performance)
+#library(kableExtra)
+```
+
+## Analyzing and visualizing PGA tour data from 2015-2022 
+
+#### Data Import ####
+```{r, include=FALSE}
+# data pulled from: https://www.advancedsportsanalytics.com/pga-overview
+
+# Reading in Data
+pga <- read_csv("ASA All PGA Raw Data - Tourn Level2015.csv", na = c("", "NA", "999"))
+```
+
+#### Basic data cleaning and looking at descriptives 
+```{r, warning=FALSE}
+# data pulled from: https://www.advancedsportsanalytics.com/pga-overview
+
+# look at var names and info
+#names(pga)
+#str(pga)
+#head(pga)
+
+# drop the empty variables
+pga$`Unnamed: 2`<-NULL
+pga$`Unnamed: 3`<-NULL
+pga$`Unnamed: 4`<-NULL
+
+# look for other NAs
+pga[rowSums(is.na(pga))==0,]
+
+# subset to numeric vars and describe
+numVARS<-c("hole_par",
+          "strokes",
+          "hole_DKP",
+          "hole_FDP",
+          "hole_SDP",
+          "streak_DKP",
+          "streak_FDP",
+          "streak_SDP",
+          "pos",
+          "finish_DKP",
+          "finish_FDP",
+          "finish_SDP",
+          "total_DKP",
+          "total_FDP",
+          "total_SDP",
+          "sg_putt",
+          "sg_arg",
+          "sg_app",
+          "sg_ott",
+          "sg_t2g",
+          "sg_total"
+)
+numITEMS<-pga[numVARS]
+
+numITEMS %>% 
+  summarise(across(everything(), ~ sum(is.na(.x))))
+
+pga<-pga %>%
+  filter_at(vars(sg_putt, sg_arg, sg_app, sg_ott, sg_t2g, sg_total), all_vars(!is.na(.)))
+
+numITEMS<-numITEMS %>%
+  filter_at(vars(sg_putt, sg_arg, sg_app, sg_ott, sg_t2g, sg_total), all_vars(!is.na(.)))
+
+kable(describe(numITEMS), 
+      format='markdown', 
+      digits=3)
+```
+
+## Course-based Research Questions: 
+### Create course aggregates overall and by season
+```{r}
+courseVARS<-c(
+  "course",
+          "sg_putt",
+          "sg_arg",
+          "sg_app",
+          "sg_ott",
+          "sg_t2g",
+          "sg_total"
+)
+courseITEMS<-pga[courseVARS]
+
+datwidenoyr <- courseITEMS %>% group_by(course) %>%   
+  mutate(
+    avg_sg_putt = mean(sg_putt,na.rm=T),
+    avg_sg_arg = mean(sg_arg,na.rm=T),
+    avg_sg_app = mean(sg_app,na.rm=T),
+    avg_sg_ott = mean(sg_ott,na.rm=T),
+    avg_sg_t2g = mean(sg_t2g,na.rm=T),
+    avg_sg_total = mean(sg_total,na.rm=T))
+
+aggVARS<-c(
+  "course",
+          "avg_sg_putt",
+          "avg_sg_arg",
+          "avg_sg_app",
+          "avg_sg_ott",
+          "avg_sg_t2g",
+          "avg_sg_total"
+)
+datwidenoyrclean<-datwidenoyr[aggVARS]
+
+datwidenoyrclean<-distinct(datwidenoyrclean)
+
+#### by year 
+pga$season<-as.factor(pga$season)
+
+courseVARS<-c(
+  "course",
+  "season",
+          "sg_putt",
+          "sg_arg",
+          "sg_app",
+          "sg_ott",
+          "sg_t2g",
+          "sg_total"
+)
+courseITEMS<-pga[courseVARS]
+
+datwideyr <- courseITEMS %>% group_by(course, season) %>%   
+  mutate(
+    avg_sg_putt = mean(sg_putt,na.rm=T),
+    avg_sg_arg = mean(sg_arg,na.rm=T),
+    avg_sg_app = mean(sg_app,na.rm=T),
+    avg_sg_ott = mean(sg_ott,na.rm=T),
+    avg_sg_t2g = mean(sg_t2g,na.rm=T),
+    avg_sg_total = mean(sg_total,na.rm=T))
+
+aggVARS<-c(
+  "course",
+  "season",
+          "avg_sg_putt",
+          "avg_sg_arg",
+          "avg_sg_app",
+          "avg_sg_ott",
+          "avg_sg_t2g",
+          "avg_sg_total"
+)
+datwideyrclean<-datwideyr[aggVARS]
+
+datwideyrclean<-distinct(datwideyrclean)
+
+```
+
+### 1. How does strokes gained vary by course
+
+The metric strokes gained was developed by Columbia business professor Mark Broadie and was a massive advancement in golf analytics: https://www8.gsb.columbia.edu/researcharchive/articles/4996. Strokes Gained measures the quality of each shot based on its starting and ending locations. So, calculations factor in the average number of shots for a golfer to get down from a given starting distance and starting lie condition and the average number of shots to get down from a given end distance and end lie condition. These average numbers are different for professional vs. amateur golfers. Negative numbers represent how many shots a golfer has lost compared to the benchmark, while positive numbers represent how many shots have been gained against said benchmark. Negative numbers highlight areas for improvement, while positive numbers indicate the golfer has performed well. 
+
+### 1. How do different strokes gained metrics vary course to course from 2015-2022? 
+#### 1a. Which courses had the toughest greens on average from 2015-2022?
+```{r, fig.height=12, fig.width=7}
+datwidenoyrclean <- datwidenoyrclean[order(datwidenoyrclean$avg_sg_putt),]
+head(datwidenoyrclean$course)
+
+ggplot(datwidenoyrclean, aes(avg_sg_putt, reorder(course, avg_sg_putt))) +
+        geom_point() + xlab("Avg SG Putting") + ylab("Course") + theme_minimal()
+```
+
+#### 1b. Which courses were toughest around the greens on average from 2015-2022?
+```{r, fig.height=12, fig.width=7}
+datwidenoyrclean <- datwidenoyrclean[order(datwidenoyrclean$avg_sg_arg),]
+head(datwidenoyrclean$course)
+
+ggplot(datwidenoyrclean, aes(avg_sg_arg, reorder(course, avg_sg_arg))) +
+        geom_point() + xlab("Avg SG ARG") + ylab("Course") + theme_minimal()
+```
+
+#### 1c. Which courses were toughest on the approach on average from 2015-2022?
+```{r, fig.height=12, fig.width=7}
+datwidenoyrclean <- datwidenoyrclean[order(datwidenoyrclean$avg_sg_app),]
+head(datwidenoyrclean$course)
+
+ggplot(datwidenoyrclean, aes(avg_sg_app, reorder(course, avg_sg_app))) +
+        geom_point() + xlab("Avg SG App") + ylab("Course") + theme_minimal()
+```
+
+#### 1d. Which courses were toughest off the tee on average from 2015-2022?
+```{r, fig.height=12, fig.width=7}
+datwidenoyrclean <- datwidenoyrclean[order(datwidenoyrclean$avg_sg_ott),]
+head(datwidenoyrclean$course)
+
+ggplot(datwidenoyrclean, aes(avg_sg_ott, reorder(course, avg_sg_ott))) +
+        geom_point() + xlab("Avg SG OTT") + ylab("Course") + theme_minimal()
+```
+
+#### 1e. Which courses were toughest as measured by total strokes gained from 2015-2022?
+```{r, fig.height=12, fig.width=7}
+datwidenoyrclean <- datwidenoyrclean[order(datwidenoyrclean$avg_sg_total),]
+head(datwidenoyrclean$course)
+
+ggplot(datwidenoyrclean, aes(avg_sg_total, reorder(course, avg_sg_total))) +
+        geom_point() + xlab("Avg SG Total") + ylab("Course") + theme_minimal()
+```
+
+
+### 2. How have strokes gained fluctuated by course over time? 
+```{r, message=FALSE, warning=FALSE, fig.width=12}
+tspag = ggplot(datwideyrclean, aes(x=season, y=avg_sg_putt, group = course)) + 
+  geom_line() + guides(colour=FALSE) + xlab("Season") +
+  ylab("Avg SG Putt")
+spag1 = tspag + aes(colour = factor(course)) + theme_bw()
+
+tspag = ggplot(datwideyrclean, aes(x=season, y=avg_sg_arg, group = course)) + 
+  geom_line() + guides(colour=FALSE) + xlab("Season") +
+  ylab("Avg SG Around the Green")
+spag2 = tspag + aes(colour = factor(course)) + theme_bw()
+
+tspag = ggplot(datwideyrclean, aes(x=season, y=avg_sg_app, group = course)) + 
+  geom_line() + guides(colour=FALSE) + xlab("Season") +
+  ylab("Avg SG Approach")
+spag3 = tspag + aes(colour = factor(course)) + theme_bw()
+
+tspag = ggplot(datwideyrclean, aes(x=season, y=avg_sg_ott, group = course)) + 
+  geom_line() + guides(colour=FALSE) + xlab("Season") +
+  ylab("Avg SG Off the Tee")
+spag4 = tspag + aes(colour = factor(course)) + theme_bw()
+
+tspag = ggplot(datwideyrclean, aes(x=season, y=avg_sg_t2g, group = course)) + 
+  geom_line() + guides(colour=FALSE) + xlab("Season") +
+  ylab("Avg SG Tee to Green")
+spag5 = tspag + aes(colour = factor(course)) + theme_bw()
+
+tspag = ggplot(datwideyrclean, aes(x=season, y=avg_sg_total, group = course)) + 
+  geom_line() + guides(colour=FALSE) + xlab("Season") +
+  ylab("Avg SG Total")
+spag6 = tspag + aes(colour = factor(course)) + theme_bw()
+
+
+library(gridExtra)
+grid.arrange(spag1, spag2, spag3, spag4, spag5, spag6, nrow = 2,
+             top = "Strokes Gained by Course over Time"
+)
+```
+
+## Player-based Research Questions: 
+### 1. Who appeared in the most tournaments since 2015?
+#### 1a. What is the average number of tournament appearances? 
+
+```{r, warning=FALSE}
+# count players' appearances
+app<-as.data.frame(table(pga$Player_initial_last)) 
+app<-app[ order(-app$Freq), ]
+head(app)
+
+kable(describe(app$Freq), format='markdown', 
+      digits=3) 
+
+ggplot(app, aes(x=Freq))+
+  geom_histogram(color="#FFFFFF", fill="#003C80")+
+  scale_x_continuous(breaks = seq(0, 200, by = 10))+
+  scale_y_continuous(breaks = seq(0, 90, len = 10))+
+  labs(title="Player Tournament Appearances (2015-2022)",x="Frequency", y = "Count")+
+  theme_minimal()
+```
+
+Brian Stuard appeared in the most PGA tournaments from 2015-2022. The average number of tournaments played in was 63. Many players performed in fewer than 20 tournaments.  
+
+### 2. Who won the most tournaments since 2015?
+```{r, message=FALSE, warning=FALSE, fig.width=12}
+winners <- pga[ which(pga$pos==1), ]
+
+wincount<-winners %>% count(Player_initial_last)
+wincount<-wincount[ order(-wincount$n), ]
+
+ggplot(winners, aes(x = fct_infreq(Player_initial_last)))+
+  geom_bar(color="#FFFFFF", fill="#CCA600")+
+  labs(title="Player Tournament Wins (2015-2022)",x="Player", y = "Count")+
+  theme_minimal()+
+  theme(legend.position = "bottom", axis.text.x = element_text(angle=60, size=7, hjust = 1))
+```
+
+Dustin Johnson and Justin Thomas had the most tournament wins in this time period. 
+
+#### 2a. How have wins changed over time? 
+```{r, warning=FALSE}
+library(gghighlight)
+library(plotly)
+
+winby<-as.data.frame(table(winners$Player_initial_last, winners$season))
+
+winby <- winby %>% 
+       rename("player" = "Var1",
+              "season" = "Var2",
+              "wins" = "Freq")
+
+p2 <- winby %>% 
+  ggplot(aes(x = season, y = wins, group = player)) + 
+  labs(x= "Season", y= "Wins") + 
+  ggtitle("Tournament Wins Over Time") +
+  geom_line() + 
+  gghighlight(player == "R. McIlroy")+
+  theme_minimal()
+p2
+
+```
+
+
+### 3. Examining max streak DKP, FDP and SDP (fantasy golf / sports betting data)
+```{r, warning=FALSE}
+streakVARS<-c(
+           "streak_DKP",
+           "streak_FDP",
+           "streak_SDP"
+)
+streakITEMS<-pga[streakVARS]
+kable(describe(streakITEMS), format='markdown', 
+      digits=3) 
+```
+
+### 4. Information on strokes and strokes gained 
+```{r, warning=FALSE}
+## plot by cut
+## scale strokes by round
+pga$strokesperround<-(pga$strokes/pga$n_rounds)
+pga$made_cut<-as.factor(pga$made_cut)
+
+ggplot(pga, aes(x=made_cut, y=strokesperround, fill=made_cut)) + 
+  geom_boxplot()+
+  theme_bw()+
+  labs(title="Stokes per Round by Cut", y = "Strokes per Round", x = "")+
+  scale_fill_discrete(name = "Made Cut", labels = c("No", "Yes"))+
+  theme(legend.position="bottom")
+
+## strokes and par 
+ggplot(pga, aes(x=hole_par, y=strokes)) + 
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(y = "Total Strokes", x = "Total Hole Par")+
+  theme_bw()  
+
+## correlation matrix of numeric items
+res <- cor(numITEMS, use="pairwise.complete.obs")
+library(corrplot)
+corrplot(res, type = "lower", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+# distributions of strokes gained
+p1<-ggplot(pga, aes(sg_putt))+
+  geom_histogram(color="darkgreen", fill="lightgreen")+
+  labs(x="Putt")+
+  theme_bw()
+
+p2<-ggplot(pga, aes(sg_arg))+
+  geom_histogram(color="darkgreen", fill="lightgreen")+
+  labs(x="ARG")+
+  theme_bw()
+
+p3<-ggplot(pga, aes(sg_app))+
+  geom_histogram(color="darkgreen", fill="lightgreen")+
+  labs(x="App")+
+  theme_bw()
+
+p4<-ggplot(pga, aes(sg_ott))+
+  geom_histogram(color="darkgreen", fill="lightgreen")+
+  labs(x="OTT")+
+  theme_bw()
+
+p5<-ggplot(pga, aes(sg_t2g))+
+  geom_histogram(color="darkgreen", fill="lightgreen")+
+  labs(x="t2g")+
+  theme_bw()
+
+p6<-ggplot(pga, aes(sg_total))+
+  geom_histogram(color="darkgreen", fill="lightgreen")+
+  labs(x="Total")+
+  theme_bw()
+
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, p5, p6, nrow = 2,
+             top = "Strokes Gained"
+)
+
+sgVARS<-c(
+           "strokes",
+           "pos",
+           "sg_putt",
+           "sg_arg",
+           "sg_app",
+           "sg_ott",
+           "sg_t2g",
+           "sg_total"
+
+)
+sgITEMS<-pga[sgVARS]
+kable(describe(sgITEMS), format='markdown', 
+      digits=3) 
+
+res2 <- cor(sgITEMS, use="pairwise.complete.obs")
+round(res2, 2)
+library(corrplot)
+corrplot(res2, type = "lower", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+```
+
+Strokes gained total and tee-to-green are sums of other strokes gained categories. 
+
+###### 4b. Strokes gained predicting position
+```{r, warning=FALSE}
+library(sjPlot)
+pga$playerid<-as.factor(pga$`player id`)
+pga$tourid<-as.factor(pga$`tournament id`)
+
+m1<- lmer(pos ~ sg_ott+sg_app+sg_arg+sg_putt+(1|playerid), data=pga)
+#summary(m1)
+tab_model(m1)
+
+#check_model(m1)
+#model_performance(m1)
+```
+
+Unsurprisingly, as the total hole par increases, so do the number of strokes. Also unsurprisingly, players who made the cut had fewer stokes per round. Only players that made the cut received a final position ranking. For players that made the cut, each category of strokes gained was negatively related to final position indicating that higher strokes gained corresponded a lower position (better performance). Strokes gained putting and approaching the green were the most strongly related to worse performance. 
+
+Additionally, the strokes gained categories were uncorrelated with each other indicating that they are independent. For example, strokes gained putting was not related to strokes gained on the approach. So, if a golfer is struggling in one area, that may be independent from performance in other areas. 
+
+After accounting for clustering within player, all categories of of strokes gained statistically predicted final position in players that made the cut.   
+
+Strokes gained while putting is often what we hear about in golf coverage and what my high school golf coach always emphasized. However, among players that made tournament cuts, these results indicate that which category of strokes gained is the most impactful for overall performance may vary player to player. 
+
+Importantly, since only players that made the cut get a position, these relationships could change in the full sample. Let's take a look at strokes gained predicting performance but with making the cut (yes/no) as the outcome.   
+
+```{r, message=FALSE, warning=FALSE, fig.width=8}
+table(pga$made_cut)
+
+p1<-ggplot(pga, aes(x=made_cut, y=sg_ott, fill=made_cut)) + 
+  geom_boxplot()+
+  theme_bw()+
+  labs(y = "Stokes Gained Off the Tee", x = "")+
+  scale_fill_discrete(name = "Made Cut", labels = c("No", "Yes"))+
+  theme(legend.position = "none")
+
+p2<-ggplot(pga, aes(x=made_cut, y=sg_app, fill=made_cut)) + 
+  geom_boxplot()+
+  theme_bw()+
+  labs(y = "Stokes Gained Approach", x = "")+
+  scale_fill_discrete(name = "Made Cut", labels = c("No", "Yes"))+
+  theme(legend.position = "none")
+
+p3<-ggplot(pga, aes(x=made_cut, y=sg_arg, fill=made_cut)) + 
+  geom_boxplot()+
+  theme_bw()+
+  labs(y = "Stokes Gained Around the Green", x = "")+
+  scale_fill_discrete(name = "Made Cut", labels = c("No", "Yes"))+
+  theme(legend.position = "none")
+
+p4<-ggplot(pga, aes(x=made_cut, y=sg_putt, fill=made_cut)) + 
+  geom_boxplot()+
+  theme_bw()+
+  labs(y = "Stokes Gained Putting", x = "")+
+  scale_fill_discrete(name = "Made Cut", labels = c("No", "Yes"))+
+  theme(legend.position = "none")
+
+p5<-ggplot(pga, aes(x=made_cut, y=sg_t2g, fill=made_cut)) + 
+  geom_boxplot()+
+  theme_bw()+
+  labs(y = "Stokes Gained Tee-to-Green", x = "")+
+  scale_fill_discrete(name = "Made Cut", labels = c("No", "Yes"))+
+  theme(legend.position = "none")
+
+p6<-ggplot(pga, aes(x=made_cut, y=sg_total, fill=made_cut)) + 
+  geom_boxplot()+
+  theme_bw()+
+  labs(y = "Stokes Gained Total", x = "")+
+  scale_fill_discrete(name = "Made Cut", labels = c("No", "Yes"))+
+  theme(legend.position = "none")
+
+plegend<-ggplot(pga, aes(x=made_cut, y=sg_total, fill=made_cut)) + 
+  geom_boxplot()+
+  theme_bw()+
+  labs(y = "Stokes Gained Total", x = "")+
+  scale_fill_discrete(name = "Made Cut", labels = c("No", "Yes"))+
+  theme(legend.position = "bottom")
+
+extract_legend <- function(my_ggp) {
+  step1 <- ggplot_gtable(ggplot_build(my_ggp))
+  step2 <- which(sapply(step1$grobs, function(x) x$name) == "guide-box")
+  step3 <- step1$grobs[[step2]]
+  return(step3)
+}
+
+shared_legend <- extract_legend(plegend)
+
+library(gridExtra)
+grid.arrange(arrangeGrob(p1, p2, p3, p4, p5, p6, ncol = 3),
+             top = "Strokes Gained by Cut",
+             shared_legend, nrow = 2, heights = c(10, 1))
+
+quallogit <- glmer(made_cut ~ sg_ott+sg_app+sg_arg+sg_putt+(1|playerid), data = pga, family = "binomial", control = glmerControl(optimizer = "bobyqa"),
+    nAGQ = 10)
+
+print(quallogit, corr=FALSE)
+se <- sqrt(diag(vcov(quallogit)))
+(tab <- cbind(Est = fixef(quallogit), LL = fixef(quallogit) - 1.96 * se, UL = fixef(quallogit) + 1.96 *
+    se))
+
+tab_model(quallogit)
+```
+
+Similar to the restricted sample, each category of strokes gained independently statistically predicted if player performance indexed by making the tournament cut. Higher strokes gained corresponded a better chance of making the tournament. 
+
+
+jpeg("spag.jpeg", units = "in", width = 12, res=200)
+grid.arrange(spag1, spag2, spag3, spag4, spag5, spag6, nrow = 2, top = "Strokes Gained by Course over Time")
+dev.off()
