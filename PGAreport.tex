@@ -1,0 +1,1664 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={PGA Tour Data Analysis},
+  pdfauthor={Sam Freis},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\title{PGA Tour Data Analysis}
+\author{Sam Freis}
+\date{1/9/2023}
+
+\begin{document}
+\maketitle
+
+\hypertarget{analyzing-and-visualizing-pga-tour-data-from-2019-2022}{%
+\subsection{Analyzing and visualizing PGA tour data from
+2019-2022}\label{analyzing-and-visualizing-pga-tour-data-from-2019-2022}}
+
+\hypertarget{data-import}{%
+\paragraph{Data Import}\label{data-import}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# data pulled from: https://www.advancedsportsanalytics.com/pga-overview}
+
+\CommentTok{# Reading in Data}
+\NormalTok{pga <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{"ASA All PGA Raw Data - Tourn Level.csv"}\NormalTok{, }\DataTypeTok{na =} \KeywordTok{c}\NormalTok{(}\StringTok{""}\NormalTok{, }\StringTok{"NA"}\NormalTok{, }\StringTok{"999"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   .default = col_double(),
+##   Player_initial_last = col_character(),
+##   player = col_character(),
+##   `Unnamed: 2` = col_logical(),
+##   `Unnamed: 3` = col_logical(),
+##   `Unnamed: 4` = col_logical(),
+##   `tournament name` = col_character(),
+##   course = col_character(),
+##   date = col_date(format = ""),
+##   Finish = col_character()
+## )
+## i Use `spec()` for the full column specifications.
+\end{verbatim}
+
+\hypertarget{basic-data-cleaning-and-looking-at-descriptives}{%
+\paragraph{Basic data cleaning and looking at
+descriptives}\label{basic-data-cleaning-and-looking-at-descriptives}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# look at var names and info}
+\KeywordTok{names}\NormalTok{(pga)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "Player_initial_last" "tournament id"       "player id"          
+##  [4] "hole_par"            "strokes"             "hole_DKP"           
+##  [7] "hole_FDP"            "hole_SDP"            "streak_DKP"         
+## [10] "streak_FDP"          "streak_SDP"          "n_rounds"           
+## [13] "made_cut"            "pos"                 "finish_DKP"         
+## [16] "finish_FDP"          "finish_SDP"          "total_DKP"          
+## [19] "total_FDP"           "total_SDP"           "player"             
+## [22] "Unnamed: 2"          "Unnamed: 3"          "Unnamed: 4"         
+## [25] "tournament name"     "course"              "date"               
+## [28] "purse"               "season"              "no_cut"             
+## [31] "Finish"              "sg_putt"             "sg_arg"             
+## [34] "sg_app"              "sg_ott"              "sg_t2g"             
+## [37] "sg_total"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(pga)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## spec_tbl_df [15,002 x 37] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ Player_initial_last: chr [1:15002] "A. Hadwin" "A. Noren" "A. Putnam" "A. Scott" ...
+##  $ tournament id      : num [1:15002] 4.01e+08 4.01e+08 4.01e+08 4.01e+08 4.01e+08 ...
+##  $ player id          : num [1:15002] 5548 3832 5502 388 9484 ...
+##  $ hole_par           : num [1:15002] 284 284 284 284 284 284 284 284 284 284 ...
+##  $ strokes            : num [1:15002] 283 285 279 274 283 277 282 282 281 276 ...
+##  $ hole_DKP           : num [1:15002] 57 47 65 77.5 59.5 70.5 57.5 56 60.5 68 ...
+##  $ hole_FDP           : num [1:15002] 51.3 43.3 61.1 72.7 54 64.4 53.3 52.2 55.4 65.6 ...
+##  $ hole_SDP           : num [1:15002] 62 62 66 75 59 73 63 64 65 72 ...
+##  $ streak_DKP         : num [1:15002] 0 3 3 0 3 3 0 0 3 6 ...
+##  $ streak_FDP         : num [1:15002] 1.8 1.8 7.6 5.6 11.8 11.2 6.8 6.2 16.6 18 ...
+##  $ streak_SDP         : num [1:15002] 0 3 3 0 3 4 0 0 4 7 ...
+##  $ n_rounds           : num [1:15002] 4 4 4 4 4 4 4 4 4 4 ...
+##  $ made_cut           : num [1:15002] 1 1 1 1 1 1 1 1 1 1 ...
+##  $ pos                : num [1:15002] 44 52 23 5 44 15 35 35 32 12 ...
+##  $ finish_DKP         : num [1:15002] 1 0 4 14 1 6 2 2 2 6 ...
+##  $ finish_FDP         : num [1:15002] 0 0 3 14 0 5 1 1 1 5 ...
+##  $ finish_SDP         : num [1:15002] 0 0 1 9 0 3 0 0 0 3 ...
+##  $ total_DKP          : num [1:15002] 58 50 72 91.5 63.5 79.5 59.5 58 65.5 80 ...
+##  $ total_FDP          : num [1:15002] 53.1 45.1 71.7 92.3 65.8 80.6 61.1 59.4 73 88.6 ...
+##  $ total_SDP          : num [1:15002] 62 65 70 84 62 80 63 64 69 82 ...
+##  $ player             : chr [1:15002] "Adam Hadwin" "Alexander Noren" "Andrew Putnam" "Adam Scott" ...
+##  $ Unnamed: 2         : logi [1:15002] NA NA NA NA NA NA ...
+##  $ Unnamed: 3         : logi [1:15002] NA NA NA NA NA NA ...
+##  $ Unnamed: 4         : logi [1:15002] NA NA NA NA NA NA ...
+##  $ tournament name    : chr [1:15002] "BMW Championship" "BMW Championship" "BMW Championship" "BMW Championship" ...
+##  $ course             : chr [1:15002] "Wilmington Country Club - Wilmington, DE" "Wilmington Country Club - Wilmington, DE" "Wilmington Country Club - Wilmington, DE" "Wilmington Country Club - Wilmington, DE" ...
+##  $ date               : Date[1:15002], format: "2022-08-21" "2022-08-21" ...
+##  $ purse              : num [1:15002] 15 15 15 15 15 15 15 15 15 15 ...
+##  $ season             : num [1:15002] 2022 2022 2022 2022 2022 ...
+##  $ no_cut             : num [1:15002] 1 1 1 1 1 1 1 1 1 1 ...
+##  $ Finish             : chr [1:15002] "T44" "T52" "T23" "T5" ...
+##  $ sg_putt            : num [1:15002] -0.56 0.99 1.3 0.7 -0.23 0.34 -0.71 0.07 0.01 2.36 ...
+##  $ sg_arg             : num [1:15002] 0.23 -0.09 0.49 0.28 -1.08 -0.74 0.29 -0.32 -0.34 -0.11 ...
+##  $ sg_app             : num [1:15002] -0.03 -1.63 -0.27 0.27 1.31 0.84 0.6 0.41 0 -0.25 ...
+##  $ sg_ott             : num [1:15002] -0.13 -0.28 -1.01 0.5 -0.49 0.56 -0.44 -0.41 0.32 -0.76 ...
+##  $ sg_t2g             : num [1:15002] 0.06 -1.99 -0.8 1.05 -0.27 0.66 0.46 -0.32 -0.01 -1.11 ...
+##  $ sg_total           : num [1:15002] -0.5 -1 0.5 1.75 -0.5 1 -0.25 -0.25 0 1.25 ...
+##  - attr(*, "spec")=
+##   .. cols(
+##   ..   Player_initial_last = col_character(),
+##   ..   `tournament id` = col_double(),
+##   ..   `player id` = col_double(),
+##   ..   hole_par = col_double(),
+##   ..   strokes = col_double(),
+##   ..   hole_DKP = col_double(),
+##   ..   hole_FDP = col_double(),
+##   ..   hole_SDP = col_double(),
+##   ..   streak_DKP = col_double(),
+##   ..   streak_FDP = col_double(),
+##   ..   streak_SDP = col_double(),
+##   ..   n_rounds = col_double(),
+##   ..   made_cut = col_double(),
+##   ..   pos = col_double(),
+##   ..   finish_DKP = col_double(),
+##   ..   finish_FDP = col_double(),
+##   ..   finish_SDP = col_double(),
+##   ..   total_DKP = col_double(),
+##   ..   total_FDP = col_double(),
+##   ..   total_SDP = col_double(),
+##   ..   player = col_character(),
+##   ..   `Unnamed: 2` = col_logical(),
+##   ..   `Unnamed: 3` = col_logical(),
+##   ..   `Unnamed: 4` = col_logical(),
+##   ..   `tournament name` = col_character(),
+##   ..   course = col_character(),
+##   ..   date = col_date(format = ""),
+##   ..   purse = col_double(),
+##   ..   season = col_double(),
+##   ..   no_cut = col_double(),
+##   ..   Finish = col_character(),
+##   ..   sg_putt = col_double(),
+##   ..   sg_arg = col_double(),
+##   ..   sg_app = col_double(),
+##   ..   sg_ott = col_double(),
+##   ..   sg_t2g = col_double(),
+##   ..   sg_total = col_double()
+##   .. )
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(pga)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 37
+##   Player_initial_last `tournament id` `player id` hole_par strokes hole_DKP
+##   <chr>                         <dbl>       <dbl>    <dbl>   <dbl>    <dbl>
+## 1 A. Hadwin                 401353275        5548      284     283     57  
+## 2 A. Noren                  401353275        3832      284     285     47  
+## 3 A. Putnam                 401353275        5502      284     279     65  
+## 4 A. Scott                  401353275         388      284     274     77.5
+## 5 A. Smalley                401353275        9484      284     283     59.5
+## 6 A. Wise                   401353275       10577      284     277     70.5
+## # ... with 31 more variables: hole_FDP <dbl>, hole_SDP <dbl>, streak_DKP <dbl>,
+## #   streak_FDP <dbl>, streak_SDP <dbl>, n_rounds <dbl>, made_cut <dbl>,
+## #   pos <dbl>, finish_DKP <dbl>, finish_FDP <dbl>, finish_SDP <dbl>,
+## #   total_DKP <dbl>, total_FDP <dbl>, total_SDP <dbl>, player <chr>,
+## #   Unnamed: 2 <lgl>, Unnamed: 3 <lgl>, Unnamed: 4 <lgl>,
+## #   tournament name <chr>, course <chr>, date <date>, purse <dbl>,
+## #   season <dbl>, no_cut <dbl>, Finish <chr>, sg_putt <dbl>, sg_arg <dbl>, ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# drop the empty variables}
+\NormalTok{pga}\OperatorTok{$}\StringTok{`}\DataTypeTok{Unnamed: 2}\StringTok{`}\NormalTok{<-}\OtherTok{NULL}
+\NormalTok{pga}\OperatorTok{$}\StringTok{`}\DataTypeTok{Unnamed: 3}\StringTok{`}\NormalTok{<-}\OtherTok{NULL}
+\NormalTok{pga}\OperatorTok{$}\StringTok{`}\DataTypeTok{Unnamed: 4}\StringTok{`}\NormalTok{<-}\OtherTok{NULL}
+
+\CommentTok{# look for other NAs}
+\NormalTok{pga[}\KeywordTok{rowSums}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(pga))}\OperatorTok{==}\DecValTok{0}\NormalTok{,]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6,818 x 34
+##    Player_initial_last `tournament id` `player id` hole_par strokes hole_DKP
+##    <chr>                         <dbl>       <dbl>    <dbl>   <dbl>    <dbl>
+##  1 A. Hadwin                 401353275        5548      284     283     57  
+##  2 A. Noren                  401353275        3832      284     285     47  
+##  3 A. Putnam                 401353275        5502      284     279     65  
+##  4 A. Scott                  401353275         388      284     274     77.5
+##  5 A. Smalley                401353275        9484      284     283     59.5
+##  6 A. Wise                   401353275       10577      284     277     70.5
+##  7 B. Harman                 401353275        1225      284     282     57.5
+##  8 B. Horschel               401353275        1651      284     282     56  
+##  9 B. Steele                 401353275        3596      284     281     60.5
+## 10 C. Bezuidenhout           401353275        9243      284     276     68  
+## # ... with 6,808 more rows, and 28 more variables: hole_FDP <dbl>,
+## #   hole_SDP <dbl>, streak_DKP <dbl>, streak_FDP <dbl>, streak_SDP <dbl>,
+## #   n_rounds <dbl>, made_cut <dbl>, pos <dbl>, finish_DKP <dbl>,
+## #   finish_FDP <dbl>, finish_SDP <dbl>, total_DKP <dbl>, total_FDP <dbl>,
+## #   total_SDP <dbl>, player <chr>, tournament name <chr>, course <chr>,
+## #   date <date>, purse <dbl>, season <dbl>, no_cut <dbl>, Finish <chr>,
+## #   sg_putt <dbl>, sg_arg <dbl>, sg_app <dbl>, sg_ott <dbl>, sg_t2g <dbl>, ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# subset to numeric vars and describe}
+\NormalTok{numVARS<-}\KeywordTok{c}\NormalTok{(}\StringTok{"hole_par"}\NormalTok{,}
+          \StringTok{"strokes"}\NormalTok{,}
+          \StringTok{"hole_DKP"}\NormalTok{,}
+          \StringTok{"hole_FDP"}\NormalTok{,}
+          \StringTok{"hole_SDP"}\NormalTok{,}
+          \StringTok{"streak_DKP"}\NormalTok{,}
+          \StringTok{"streak_FDP"}\NormalTok{,}
+          \StringTok{"streak_SDP"}\NormalTok{,}
+          \StringTok{"pos"}\NormalTok{,}
+          \StringTok{"finish_DKP"}\NormalTok{,}
+          \StringTok{"finish_FDP"}\NormalTok{,}
+          \StringTok{"finish_SDP"}\NormalTok{,}
+          \StringTok{"total_DKP"}\NormalTok{,}
+          \StringTok{"total_FDP"}\NormalTok{,}
+          \StringTok{"total_SDP"}\NormalTok{,}
+          \StringTok{"sg_putt"}\NormalTok{,}
+          \StringTok{"sg_arg"}\NormalTok{,}
+          \StringTok{"sg_app"}\NormalTok{,}
+          \StringTok{"sg_ott"}\NormalTok{,}
+          \StringTok{"sg_t2g"}\NormalTok{,}
+          \StringTok{"sg_total"}
+\NormalTok{)}
+\NormalTok{numITEMS<-pga[numVARS]}
+
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{describe}\NormalTok{(numITEMS), }
+      \DataTypeTok{format=}\StringTok{'markdown'}\NormalTok{, }
+      \DataTypeTok{digits=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrrrrrrrrrrr@{}}
+\toprule
+\begin{minipage}[b]{0.07\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[b]{0.03\columnwidth}\raggedleft
+vars\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+n\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+mean\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+sd\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+median\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+trimmed\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+mad\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+min\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+max\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+range\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+skew\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\raggedleft
+kurtosis\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+se\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+hole\_par\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+222.526\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+70.883\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+280.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+225.329\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+11.861\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+70.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+292.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+222.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.304\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-1.809\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.579\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+strokes\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+220.887\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+67.094\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+270.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+222.891\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+28.169\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+67.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+313.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+246.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.295\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-1.773\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.548\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+hole\_DKP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+49.485\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+24.087\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+52.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+48.910\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+33.358\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-2.50\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+133.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+135.50\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.116\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-1.225\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.197\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+hole\_FDP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+44.099\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+24.681\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+44.20\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+43.485\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+31.728\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-21.40\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+131.60\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+153.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.163\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-1.088\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.202\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+hole\_SDP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+48.971\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+22.738\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+53.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+49.033\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+32.617\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-11.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+107.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+118.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.050\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-1.406\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.186\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+streak\_DKP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.817\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+2.919\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.197\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.000\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+23.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+23.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+2.045\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+5.003\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.024\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+streak\_FDP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+7\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+7.810\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+7.470\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+6.40\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+6.847\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+8.303\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+43.60\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+43.60\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.933\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+0.262\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.061\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+streak\_SDP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+8\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.746\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+2.765\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.153\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.000\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+21.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+21.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.847\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+3.857\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.023\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+pos\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+9\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+8082\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+33.491\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+20.882\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+32.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+32.824\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+26.687\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+83.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+82.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.213\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-1.086\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.232\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+finish\_DKP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+10\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+2.319\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+4.693\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.160\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.000\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+30.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+30.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+3.169\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+11.778\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.038\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+finish\_FDP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+11\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.984\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+4.630\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.782\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.000\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+30.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+30.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+3.464\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+13.523\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.038\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+finish\_SDP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+12\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.085\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+2.805\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.292\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.000\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+3.131\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+9.583\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.023\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+total\_DKP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+13\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+53.621\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+29.005\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+54.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+51.828\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+37.065\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-2.50\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+186.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+188.50\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.429\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-0.631\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.237\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+total\_FDP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+14\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+53.893\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+34.065\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+49.80\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+51.615\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+40.030\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-21.40\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+202.60\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+224.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.507\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-0.518\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.278\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+total\_SDP\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+15\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+51.802\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+25.885\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+54.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+50.958\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+35.582\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-11.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+141.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+152.00\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.179\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-1.097\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.211\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+sg\_putt\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+16\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.128\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.123\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.06\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.084\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.053\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-5.82\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+4.30\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+10.12\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.424\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+0.723\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.010\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+sg\_arg\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+17\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.045\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.736\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.018\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.652\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-5.41\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+3.17\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+8.58\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.527\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+1.938\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.006\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+sg\_app\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+18\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.112\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.125\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.02\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.056\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.023\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-7.51\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+3.92\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+11.43\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.630\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+1.367\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.010\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+sg\_ott\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+19\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.052\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.803\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.04\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.007\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.682\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-7.74\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+2.36\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+10.10\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-1.181\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+4.176\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.007\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+sg\_t2g\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+20\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.209\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.650\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.03\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.100\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.468\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-13.95\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+5.57\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+19.52\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.848\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+1.915\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.015\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\raggedright
+sg\_total\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+21\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12892\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.329\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.963\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.13\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.212\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.764\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-12.46\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+7.01\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+19.47\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-0.739\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+1.455\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.017\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{research-questions}{%
+\subsection{Research Questions:}\label{research-questions}}
+
+\hypertarget{who-appeared-in-the-most-tournaments-since-2019}{%
+\subsubsection{1. Who appeared in the most tournaments since
+2019?}\label{who-appeared-in-the-most-tournaments-since-2019}}
+
+\hypertarget{a.-what-is-the-average-number-of-tournament-appearances}{%
+\paragraph{1a. What is the average number of tournament
+appearances?}\label{a.-what-is-the-average-number-of-tournament-appearances}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# count players' appearances}
+\NormalTok{app<-}\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{table}\NormalTok{(pga}\OperatorTok{$}\NormalTok{Player_initial_last)) }
+\NormalTok{app<-app[ }\KeywordTok{order}\NormalTok{(}\OperatorTok{-}\NormalTok{app}\OperatorTok{$}\NormalTok{Freq), ]}
+\KeywordTok{head}\NormalTok{(app)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           Var1 Freq
+## 66   B. Stuard   88
+## 326 P. Rodgers   84
+## 403  S. Straka   84
+## 416    T. Hoge   84
+## 26   A. Schenk   83
+## 245     K. Lee   82
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{describe}\NormalTok{(app}\OperatorTok{$}\NormalTok{Freq), }\DataTypeTok{format=}\StringTok{'markdown'}\NormalTok{, }
+      \DataTypeTok{digits=}\DecValTok{3}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrrrrrrrrrrr@{}}
+\toprule
+& vars & n & mean & sd & median & trimmed & mad & min & max & range &
+skew & kurtosis & se\tabularnewline
+\midrule
+\endhead
+X1 & 1 & 463 & 32.402 & 26.953 & 29 & 30.76 & 37.065 & 1 & 88 & 87 &
+0.324 & -1.376 & 1.253\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(app, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{Freq))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{color=}\StringTok{"#FFFFFF"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"#003C80"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_x_continuous}\NormalTok{(}\DataTypeTok{breaks =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{90}\NormalTok{, }\DataTypeTok{by =} \DecValTok{10}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{breaks =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{90}\NormalTok{, }\DataTypeTok{len =} \DecValTok{10}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Player Tournament Appearances (2019-2022)"}\NormalTok{,}\DataTypeTok{x=}\StringTok{"Frequency"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Count"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\includegraphics{PGAreport_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\hypertarget{who-won-the-most-tournaments-since-2019}{%
+\subsubsection{2. Who won the most tournaments since
+2019?}\label{who-won-the-most-tournaments-since-2019}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{winners <-}\StringTok{ }\NormalTok{pga[ }\KeywordTok{which}\NormalTok{(pga}\OperatorTok{$}\NormalTok{pos}\OperatorTok{==}\DecValTok{1}\NormalTok{), ]}
+
+\NormalTok{wincount<-winners }\OperatorTok{%>%}\StringTok{ }\KeywordTok{count}\NormalTok{(Player_initial_last)}
+\NormalTok{wincount<-wincount[ }\KeywordTok{order}\NormalTok{(}\OperatorTok{-}\NormalTok{wincount}\OperatorTok{$}\NormalTok{n), ]}
+
+\KeywordTok{ggplot}\NormalTok{(winners, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{fct_infreq}\NormalTok{(Player_initial_last)))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{color=}\StringTok{"#FFFFFF"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"#CCA600"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Player Tournament Wins (2019-2022)"}\NormalTok{,}\DataTypeTok{x=}\StringTok{"Player"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Count"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"bottom"}\NormalTok{, }\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle=}\DecValTok{60}\NormalTok{, }\DataTypeTok{size=}\DecValTok{7}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{PGAreport_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\hypertarget{examining-max-streak-dkp-fdp-and-sdp-fantasy-golf-sports-betting-data}{%
+\subsubsection{3. Examining max streak DKP, FDP and SDP (fantasy golf /
+sports betting
+data)}\label{examining-max-streak-dkp-fdp-and-sdp-fantasy-golf-sports-betting-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{streakVARS<-}\KeywordTok{c}\NormalTok{(}
+           \StringTok{"streak_DKP"}\NormalTok{,}
+           \StringTok{"streak_FDP"}\NormalTok{,}
+           \StringTok{"streak_SDP"}
+\NormalTok{)}
+\NormalTok{streakITEMS<-pga[streakVARS]}
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{describe}\NormalTok{(streakITEMS), }\DataTypeTok{format=}\StringTok{'markdown'}\NormalTok{, }
+      \DataTypeTok{digits=}\DecValTok{3}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrrrrrrrrrrr@{}}
+\toprule
+& vars & n & mean & sd & median & trimmed & mad & min & max & range &
+skew & kurtosis & se\tabularnewline
+\midrule
+\endhead
+streak\_DKP & 1 & 15002 & 1.817 & 2.919 & 0.0 & 1.197 & 0.000 & 0 & 23.0
+& 23.0 & 2.045 & 5.003 & 0.024\tabularnewline
+streak\_FDP & 2 & 15002 & 7.810 & 7.470 & 6.4 & 6.847 & 8.303 & 0 & 43.6
+& 43.6 & 0.933 & 0.262 & 0.061\tabularnewline
+streak\_SDP & 3 & 15002 & 1.746 & 2.765 & 0.0 & 1.153 & 0.000 & 0 & 21.0
+& 21.0 & 1.847 & 3.857 & 0.023\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{information-on-strokes-and-strokes-gained}{%
+\subsubsection{4. Information on strokes and strokes
+gained}\label{information-on-strokes-and-strokes-gained}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## plot by cut}
+\CommentTok{## scale strokes by round}
+\NormalTok{pga}\OperatorTok{$}\NormalTok{strokesperround<-(pga}\OperatorTok{$}\NormalTok{strokes}\OperatorTok{/}\NormalTok{pga}\OperatorTok{$}\NormalTok{n_rounds)}
+\NormalTok{pga}\OperatorTok{$}\NormalTok{made_cut<-}\KeywordTok{as.factor}\NormalTok{(pga}\OperatorTok{$}\NormalTok{made_cut)}
+
+\KeywordTok{ggplot}\NormalTok{(pga, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{made_cut, }\DataTypeTok{y=}\NormalTok{strokesperround, }\DataTypeTok{fill=}\NormalTok{made_cut)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title=}\StringTok{"Stokes per Round by Cut"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Strokes per Round"}\NormalTok{, }\DataTypeTok{x =} \StringTok{""}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_discrete}\NormalTok{(}\DataTypeTok{name =} \StringTok{"Made Cut"}\NormalTok{, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"No"}\NormalTok{, }\StringTok{"Yes"}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"bottom"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{PGAreport_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## strokes and par }
+\KeywordTok{ggplot}\NormalTok{(pga, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{hole_par, }\DataTypeTok{y=}\NormalTok{strokes)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\NormalTok{lm)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"Total Strokes"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Total Hole Par"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()  }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{PGAreport_files/figure-latex/unnamed-chunk-6-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## correlation matrix of numeric items}
+\NormalTok{res <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(numITEMS, }\DataTypeTok{use=}\StringTok{"pairwise.complete.obs"}\NormalTok{)}
+\KeywordTok{round}\NormalTok{(res, }\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            hole_par strokes hole_DKP hole_FDP hole_SDP streak_DKP streak_FDP
+## hole_par       1.00    1.00     0.89     0.86     0.91       0.43       0.63
+## strokes        1.00    1.00     0.85     0.81     0.87       0.38       0.58
+## hole_DKP       0.89    0.85     1.00     0.99     0.97       0.60       0.84
+## hole_FDP       0.86    0.81     0.99     1.00     0.98       0.62       0.85
+## hole_SDP       0.91    0.87     0.97     0.98     1.00       0.58       0.77
+## streak_DKP     0.43    0.38     0.60     0.62     0.58       1.00       0.73
+## streak_FDP     0.63    0.58     0.84     0.85     0.77       0.73       1.00
+## streak_SDP     0.42    0.38     0.57     0.59     0.56       0.92       0.72
+## pos           -0.01    0.63    -0.60    -0.63    -0.63      -0.41      -0.49
+## finish_DKP     0.43    0.39     0.58     0.60     0.56       0.52       0.57
+## finish_FDP     0.38    0.34     0.53     0.55     0.51       0.50       0.54
+## finish_SDP     0.34    0.30     0.50     0.51     0.47       0.49       0.51
+## total_DKP      0.85    0.81     0.99     0.98     0.96       0.68       0.86
+## total_FDP      0.81    0.76     0.98     0.98     0.95       0.68       0.90
+## total_SDP      0.88    0.84     0.97     0.98     0.99       0.66       0.81
+## sg_putt        0.37    0.35     0.45     0.45     0.43       0.27       0.38
+## sg_arg         0.24    0.22     0.26     0.28     0.30       0.15       0.19
+## sg_app         0.37    0.34     0.44     0.46     0.45       0.28       0.36
+## sg_ott         0.25    0.23     0.30     0.32     0.33       0.19       0.24
+## sg_t2g         0.48    0.44     0.57     0.60     0.60       0.35       0.44
+## sg_total       0.62    0.57     0.73     0.76     0.75       0.45       0.60
+##            streak_SDP   pos finish_DKP finish_FDP finish_SDP total_DKP
+## hole_par         0.42 -0.01       0.43       0.38       0.34      0.85
+## strokes          0.38  0.63       0.39       0.34       0.30      0.81
+## hole_DKP         0.57 -0.60       0.58       0.53       0.50      0.99
+## hole_FDP         0.59 -0.63       0.60       0.55       0.51      0.98
+## hole_SDP         0.56 -0.63       0.56       0.51       0.47      0.96
+## streak_DKP       0.92 -0.41       0.52       0.50       0.49      0.68
+## streak_FDP       0.72 -0.49       0.57       0.54       0.51      0.86
+## streak_SDP       1.00 -0.35       0.45       0.43       0.42      0.64
+## pos             -0.35  1.00      -0.77      -0.73      -0.71     -0.71
+## finish_DKP       0.45 -0.77       1.00       0.99       0.97      0.70
+## finish_FDP       0.43 -0.73       0.99       1.00       0.99      0.65
+## finish_SDP       0.42 -0.71       0.97       0.99       1.00      0.62
+## total_DKP        0.64 -0.71       0.70       0.65       0.62      1.00
+## total_FDP        0.64 -0.69       0.69       0.65       0.62      0.99
+## total_SDP        0.65 -0.70       0.65       0.60       0.57      0.98
+## sg_putt          0.25 -0.45       0.36       0.34       0.32      0.46
+## sg_arg           0.14 -0.29       0.22       0.21       0.20      0.27
+## sg_app           0.26 -0.49       0.37       0.35       0.33      0.46
+## sg_ott           0.18 -0.38       0.26       0.25       0.24      0.31
+## sg_t2g           0.33 -0.68       0.48       0.45       0.43      0.59
+## sg_total         0.42 -0.88       0.61       0.57       0.54      0.75
+##            total_FDP total_SDP sg_putt sg_arg sg_app sg_ott sg_t2g sg_total
+## hole_par        0.81      0.88    0.37   0.24   0.37   0.25   0.48     0.62
+## strokes         0.76      0.84    0.35   0.22   0.34   0.23   0.44     0.57
+## hole_DKP        0.98      0.97    0.45   0.26   0.44   0.30   0.57     0.73
+## hole_FDP        0.98      0.98    0.45   0.28   0.46   0.32   0.60     0.76
+## hole_SDP        0.95      0.99    0.43   0.30   0.45   0.33   0.60     0.75
+## streak_DKP      0.68      0.66    0.27   0.15   0.28   0.19   0.35     0.45
+## streak_FDP      0.90      0.81    0.38   0.19   0.36   0.24   0.44     0.60
+## streak_SDP      0.64      0.65    0.25   0.14   0.26   0.18   0.33     0.42
+## pos            -0.69     -0.70   -0.45  -0.29  -0.49  -0.38  -0.68    -0.88
+## finish_DKP      0.69      0.65    0.36   0.22   0.37   0.26   0.48     0.61
+## finish_FDP      0.65      0.60    0.34   0.21   0.35   0.25   0.45     0.57
+## finish_SDP      0.62      0.57    0.32   0.20   0.33   0.24   0.43     0.54
+## total_DKP       0.99      0.98    0.46   0.27   0.46   0.31   0.59     0.75
+## total_FDP       1.00      0.97    0.46   0.27   0.46   0.32   0.59     0.76
+## total_SDP       0.97      1.00    0.44   0.30   0.46   0.33   0.61     0.77
+## sg_putt         0.46      0.44    1.00   0.02  -0.02   0.00   0.00     0.55
+## sg_arg          0.27      0.30    0.02   1.00   0.03   0.01   0.47     0.40
+## sg_app          0.46      0.46   -0.02   0.03   1.00   0.12   0.75     0.60
+## sg_ott          0.32      0.33    0.00   0.01   0.12   1.00   0.57     0.46
+## sg_t2g          0.59      0.61    0.00   0.47   0.75   0.57   1.00     0.81
+## sg_total        0.76      0.77    0.55   0.40   0.60   0.46   0.81     1.00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(corrplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## corrplot 0.90 loaded
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{corrplot}\NormalTok{(res, }\DataTypeTok{type =} \StringTok{"lower"}\NormalTok{, }\DataTypeTok{order =} \StringTok{"hclust"}\NormalTok{, }
+         \DataTypeTok{tl.col =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{tl.srt =} \DecValTok{45}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{PGAreport_files/figure-latex/unnamed-chunk-6-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# distributions of strokes gained}
+\NormalTok{p1<-}\KeywordTok{ggplot}\NormalTok{(pga, }\KeywordTok{aes}\NormalTok{(sg_putt))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{color=}\StringTok{"darkgreen"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"lightgreen"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"Putt"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{p2<-}\KeywordTok{ggplot}\NormalTok{(pga, }\KeywordTok{aes}\NormalTok{(sg_arg))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{color=}\StringTok{"darkgreen"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"lightgreen"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"ARG"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{p3<-}\KeywordTok{ggplot}\NormalTok{(pga, }\KeywordTok{aes}\NormalTok{(sg_app))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{color=}\StringTok{"darkgreen"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"lightgreen"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"App"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{p4<-}\KeywordTok{ggplot}\NormalTok{(pga, }\KeywordTok{aes}\NormalTok{(sg_ott))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{color=}\StringTok{"darkgreen"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"lightgreen"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"OTT"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{p5<-}\KeywordTok{ggplot}\NormalTok{(pga, }\KeywordTok{aes}\NormalTok{(sg_t2g))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{color=}\StringTok{"darkgreen"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"lightgreen"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"t2g"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{p6<-}\KeywordTok{ggplot}\NormalTok{(pga, }\KeywordTok{aes}\NormalTok{(sg_total))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{color=}\StringTok{"darkgreen"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"lightgreen"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"Total"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\KeywordTok{library}\NormalTok{(gridExtra)}
+\KeywordTok{grid.arrange}\NormalTok{(p1, p2, p3, p4, p5, p6, }\DataTypeTok{nrow =} \DecValTok{2}\NormalTok{,}
+             \DataTypeTok{top =} \StringTok{"Strokes Gained"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 2111 rows containing non-finite values (stat_bin).
+\end{verbatim}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 2111 rows containing non-finite values (stat_bin).
+\end{verbatim}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 2111 rows containing non-finite values (stat_bin).
+\end{verbatim}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 2111 rows containing non-finite values (stat_bin).
+\end{verbatim}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 2111 rows containing non-finite values (stat_bin).
+\end{verbatim}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 2110 rows containing non-finite values (stat_bin).
+\end{verbatim}
+
+\includegraphics{PGAreport_files/figure-latex/unnamed-chunk-6-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sgVARS<-}\KeywordTok{c}\NormalTok{(}
+           \StringTok{"strokes"}\NormalTok{,}
+           \StringTok{"pos"}\NormalTok{,}
+           \StringTok{"sg_putt"}\NormalTok{,}
+           \StringTok{"sg_arg"}\NormalTok{,}
+           \StringTok{"sg_app"}\NormalTok{,}
+           \StringTok{"sg_ott"}
+
+\NormalTok{)}
+\NormalTok{sgITEMS<-pga[sgVARS]}
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{describe}\NormalTok{(sgITEMS), }\DataTypeTok{format=}\StringTok{'markdown'}\NormalTok{, }
+      \DataTypeTok{digits=}\DecValTok{3}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrrrrrrrrrrr@{}}
+\toprule
+\begin{minipage}[b]{0.05\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[b]{0.03\columnwidth}\raggedleft
+vars\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+n\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+mean\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+sd\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+median\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+trimmed\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+mad\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+min\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+max\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+range\strut
+\end{minipage} & \begin{minipage}[b]{0.05\columnwidth}\raggedleft
+skew\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\raggedleft
+kurtosis\strut
+\end{minipage} & \begin{minipage}[b]{0.04\columnwidth}\raggedleft
+se\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.05\columnwidth}\raggedright
+strokes\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+15002\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+220.887\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+67.094\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+270.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+222.891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+28.169\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+67.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+313.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+246.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.295\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-1.773\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.548\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.05\columnwidth}\raggedright
+pos\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+8082\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+33.491\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+20.882\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+32.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+32.824\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+26.687\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+1.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+83.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+82.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.213\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+-1.086\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.232\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.05\columnwidth}\raggedright
+sg\_putt\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.128\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.123\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.06\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.084\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.053\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-5.82\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+4.30\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+10.12\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.424\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+0.723\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.010\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.05\columnwidth}\raggedright
+sg\_arg\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.045\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.736\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.00\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.018\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.652\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-5.41\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+3.17\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+8.58\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.527\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+1.938\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.006\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.05\columnwidth}\raggedright
+sg\_app\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.112\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.125\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.02\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.056\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+1.023\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-7.51\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+3.92\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+11.43\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.630\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+1.367\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.010\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.05\columnwidth}\raggedright
+sg\_ott\strut
+\end{minipage} & \begin{minipage}[t]{0.03\columnwidth}\raggedleft
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+12891\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-0.052\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.803\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.04\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.007\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+0.682\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+-7.74\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+2.36\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+10.10\strut
+\end{minipage} & \begin{minipage}[t]{0.05\columnwidth}\raggedleft
+-1.181\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedleft
+4.176\strut
+\end{minipage} & \begin{minipage}[t]{0.04\columnwidth}\raggedleft
+0.007\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res2 <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(sgITEMS, }\DataTypeTok{use=}\StringTok{"pairwise.complete.obs"}\NormalTok{)}
+\KeywordTok{round}\NormalTok{(res2, }\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         strokes   pos sg_putt sg_arg sg_app sg_ott
+## strokes    1.00  0.63    0.35   0.22   0.34   0.23
+## pos        0.63  1.00   -0.45  -0.29  -0.49  -0.38
+## sg_putt    0.35 -0.45    1.00   0.02  -0.02   0.00
+## sg_arg     0.22 -0.29    0.02   1.00   0.03   0.01
+## sg_app     0.34 -0.49   -0.02   0.03   1.00   0.12
+## sg_ott     0.23 -0.38    0.00   0.01   0.12   1.00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(corrplot)}
+\KeywordTok{corrplot}\NormalTok{(res2, }\DataTypeTok{type =} \StringTok{"lower"}\NormalTok{, }\DataTypeTok{order =} \StringTok{"hclust"}\NormalTok{, }
+         \DataTypeTok{tl.col =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{tl.srt =} \DecValTok{45}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{PGAreport_files/figure-latex/unnamed-chunk-6-5.pdf}
+
+\hypertarget{b.-strokes-gained-predicting-position}{%
+\paragraph{4b. Strokes gained predicting
+position}\label{b.-strokes-gained-predicting-position}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pga}\OperatorTok{$}\NormalTok{playerid<-}\KeywordTok{as.factor}\NormalTok{(pga}\OperatorTok{$}\StringTok{`}\DataTypeTok{player id}\StringTok{`}\NormalTok{)}
+\NormalTok{pga}\OperatorTok{$}\NormalTok{tourid<-}\KeywordTok{as.factor}\NormalTok{(pga}\OperatorTok{$}\StringTok{`}\DataTypeTok{tournament id}\StringTok{`}\NormalTok{)}
+
+\NormalTok{m1<-}\StringTok{ }\KeywordTok{lmer}\NormalTok{(pos }\OperatorTok{~}\StringTok{ }\NormalTok{sg_ott}\OperatorTok{+}\NormalTok{sg_app}\OperatorTok{+}\NormalTok{sg_arg}\OperatorTok{+}\NormalTok{sg_putt}\OperatorTok{+}\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{playerid}\OperatorTok{:}\NormalTok{tourid), }\DataTypeTok{data=}\NormalTok{pga)}
+\KeywordTok{summary}\NormalTok{(m1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Linear mixed model fit by REML ['lmerMod']
+## Formula: pos ~ sg_ott + sg_app + sg_arg + sg_putt + (1 | playerid:tourid)
+##    Data: pga
+## 
+## REML criterion at convergence: 50765.6
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -7.9216 -0.5632 -0.0114  0.6487  5.0714 
+## 
+## Random effects:
+##  Groups          Name        Variance Std.Dev.
+##  playerid:tourid (Intercept)  2.901   1.703   
+##  Residual                    97.317   9.865   
+## Number of obs: 6818, groups:  playerid:tourid, 6815
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept)  43.9323     0.1393  315.47
+## sg_ott      -13.7122     0.2020  -67.87
+## sg_app      -13.2471     0.1449  -91.42
+## sg_arg      -13.3911     0.2147  -62.36
+## sg_putt     -13.4626     0.1419  -94.89
+## 
+## Correlation of Fixed Effects:
+##         (Intr) sg_ott sg_app sg_arg
+## sg_ott  -0.196                     
+## sg_app  -0.309 -0.069              
+## sg_arg  -0.211  0.050  0.050       
+## sg_putt -0.311  0.070  0.110  0.051
+\end{verbatim}
+
+\end{document}
